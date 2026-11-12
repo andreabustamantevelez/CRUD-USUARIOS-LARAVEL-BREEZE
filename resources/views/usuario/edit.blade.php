@@ -1,210 +1,212 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Usuario</title>
+<x-app-layout>
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-    >
-</head>
-<body class="bg-light">
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
+            Editar usuario
+        </h2>
+    </x-slot>
 
-    <div class="container my-5">
-        <div class="row justify-content-center">
-            <div class="col-lg-8">
+    <div class="py-12">
+        <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
 
-                <div class="card shadow-lg border-0 rounded-3">
+            <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
 
-                    <!-- Encabezado -->
-                    <div class="card-header bg-primary text-white py-3">
-                        <h3 class="text-center mb-0">Editar Usuario</h3>
-                    </div>
+                <div class="p-6 text-gray-900 dark:text-gray-100">
 
-                    <!-- Formulario -->
-                    <div class="card-body p-4">
+                    <h3 class="text-lg font-semibold mb-6">
+                        Formulario de edición de usuario
+                    </h3>
 
-                        <!-- Mensajes de error -->
-                        @if ($errors->any())
-                            <div class="alert alert-danger">
-                                <strong>Por favor, revisa los siguientes errores:</strong>
+                    {{-- Mostrar errores de validación --}}
+                    @if ($errors->any())
+                        <div class="mb-4 rounded-md bg-red-100 p-4 text-red-800">
+                            <strong>Por favor, revisa los siguientes errores:</strong>
 
-                                <ul class="mb-0 mt-2">
-                                    @foreach ($errors->all() as $error)
-                                        <li>{{ $error }}</li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        @endif
+                            <ul class="list-disc list-inside mt-2">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
 
-                        <form
-                            method="POST"
-                            action="{{ route('usuarios.update', $usuario->id_usuario) }}"
-                        >
-                            @csrf
-                            @method('PUT')
+                    <form method="POST" action="{{ route('usuarios.update', $usuario->id_usuario) }}">
+                        @csrf
+                        @method('PUT')
 
-                            <!-- Nombre de usuario -->
-                            <div class="mb-3">
-                                <label for="username" class="form-label">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            {{-- Username --}}
+                            <div>
+                                <label for="username" class="block font-medium text-sm mb-2">
                                     Nombre de usuario
                                 </label>
 
                                 <input
-                                    class="form-control"
-                                    id="username"
-                                    name="username"
                                     type="text"
+                                    name="username"
+                                    id="username"
                                     value="{{ old('username', $usuario->username) }}"
+                                    maxlength="50"
                                     required
-                                >
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm">
+
+                                @error('username')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <!-- Contraseña -->
-                            <div class="mb-3">
-                                <label for="password" class="form-label">
+                            {{-- Contraseña --}}
+                            <div>
+                                <label for="password" class="block font-medium text-sm mb-2">
                                     Nueva contraseña
                                 </label>
 
                                 <input
-                                    class="form-control"
-                                    id="password"
-                                    name="password"
                                     type="password"
+                                    name="password"
+                                    id="password"
                                     minlength="6"
-                                >
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm">
 
-                                <div class="form-text">
+                                <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                                     Déjala vacía si no deseas cambiar la contraseña actual.
-                                </div>
+                                </p>
+
+                                @error('password')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <!-- Rol -->
-                            <div class="mb-3">
-                                <label for="rol" class="form-label">Rol</label>
+                            {{-- Rol --}}
+                            <div>
+                                <label for="rol" class="block font-medium text-sm mb-2">
+                                    Rol
+                                </label>
 
                                 <select
-                                    class="form-select"
-                                    id="rol"
                                     name="rol"
+                                    id="rol"
                                     required
-                                >
-                                    <option
-                                        value="admin"
-                                        {{ old('rol', $usuario->rol) == 'admin' ? 'selected' : '' }}
-                                    >
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm">
+
+                                    <option value="admin" {{ old('rol', $usuario->rol) == 'admin' ? 'selected' : '' }}>
                                         Administrador
                                     </option>
 
-                                    <option
-                                        value="vendedor"
-                                        {{ old('rol', $usuario->rol) == 'vendedor' ? 'selected' : '' }}
-                                    >
+                                    <option value="vendedor" {{ old('rol', $usuario->rol) == 'vendedor' ? 'selected' : '' }}>
                                         Vendedor
                                     </option>
 
-                                    <option
-                                        value="supervisor"
-                                        {{ old('rol', $usuario->rol) == 'supervisor' ? 'selected' : '' }}
-                                    >
+                                    <option value="supervisor" {{ old('rol', $usuario->rol) == 'supervisor' ? 'selected' : '' }}>
                                         Supervisor
                                     </option>
                                 </select>
+
+                                @error('rol')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <!-- Estado -->
-                            <div class="mb-3">
-                                <label for="activo" class="form-label">Estado</label>
+                            {{-- Estado --}}
+                            <div>
+                                <label for="activo" class="block font-medium text-sm mb-2">
+                                    Estado
+                                </label>
 
                                 <select
-                                    class="form-select"
-                                    id="activo"
                                     name="activo"
+                                    id="activo"
                                     required
-                                >
-                                    <option
-                                        value="1"
-                                        {{ old('activo', $usuario->activo) == '1' ? 'selected' : '' }}
-                                    >
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm">
+
+                                    <option value="1" {{ old('activo', $usuario->activo) == '1' ? 'selected' : '' }}>
                                         Activo
                                     </option>
 
-                                    <option
-                                        value="0"
-                                        {{ old('activo', $usuario->activo) == '0' ? 'selected' : '' }}
-                                    >
+                                    <option value="0" {{ old('activo', $usuario->activo) == '0' ? 'selected' : '' }}>
                                         Inactivo
                                     </option>
                                 </select>
+
+                                @error('activo')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <!-- Fecha de creación -->
-                            <div class="mb-3">
-                                <label for="fecha_creacion" class="form-label">
+                            {{-- Fecha de creación --}}
+                            <div>
+                                <label for="fecha_creacion" class="block font-medium text-sm mb-2">
                                     Fecha de creación
                                 </label>
 
                                 <input
-                                    class="form-control"
-                                    id="fecha_creacion"
-                                    name="fecha_creacion"
                                     type="date"
-                                    value="{{ old('fecha_creacion', $usuario->fecha_creacion) }}"
+                                    name="fecha_creacion"
+                                    id="fecha_creacion"
+                                    value="{{ old('fecha_creacion', \Carbon\Carbon::parse($usuario->fecha_creacion)->format('Y-m-d')) }}"
                                     required
-                                >
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm">
+
+                                @error('fecha_creacion')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <!-- Empresa -->
-                            <div class="mb-4">
-                                <label for="id_empresa" class="form-label">
+                            {{-- Empresa --}}
+                            <div>
+                                <label for="id_empresa" class="block font-medium text-sm mb-2">
                                     Empresa
                                 </label>
 
                                 <select
-                                    class="form-select"
-                                    id="id_empresa"
                                     name="id_empresa"
+                                    id="id_empresa"
                                     required
-                                >
+                                    class="w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm">
+
                                     <option value="">Seleccione una empresa</option>
 
                                     @foreach ($empresas as $empresa)
                                         <option
                                             value="{{ $empresa->id_empresa }}"
-                                            {{ old('id_empresa', $usuario->id_empresa) == $empresa->id_empresa ? 'selected' : '' }}
-                                        >
+                                            {{ old('id_empresa', $usuario->id_empresa) == $empresa->id_empresa ? 'selected' : '' }}>
                                             {{ $empresa->nombre }}
                                         </option>
                                     @endforeach
                                 </select>
+
+                                @error('id_empresa')
+                                    <p class="text-red-600 text-sm mt-1">{{ $message }}</p>
+                                @enderror
                             </div>
 
-                            <!-- Botones -->
-                            <div class="d-grid gap-2">
-                                <button
-                                    class="btn btn-primary btn-lg"
-                                    type="submit"
-                                >
-                                    Actualizar usuario
-                                </button>
+                        </div>
 
-                                <a
-                                    class="btn btn-secondary"
-                                    href="{{ route('usuarios.index') }}"
-                                >
-                                    Cancelar y volver
-                                </a>
-                            </div>
+                        {{-- Botones --}}
+                        <div class="flex items-center gap-3 mt-8">
 
-                        </form>
-                    </div>
+                            <button
+                                type="submit"
+                                class="px-5 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-md">
+                                Actualizar usuario
+                            </button>
+
+                            <a
+                                href="{{ route('usuarios.index') }}"
+                                class="px-5 py-2 bg-gray-500 hover:bg-gray-600 text-white font-medium rounded-md">
+                                Cancelar
+                            </a>
+
+                        </div>
+
+                    </form>
+
                 </div>
 
             </div>
+
         </div>
     </div>
 
-</body>
-</html>
+</x-app-layout>
